@@ -1,0 +1,118 @@
+MaxMemory
+1. -Xmx512m
+2. -Xmx512m -Xms512m
+3. -Xmx512m -Xms512m -XX:+PrintGCDetails  20 mb at cms, but not g1
+4. -Xmx512m -XX:+UseG1GC
+5. -Xms512m -Xmx512m -XX:SurvivorRatio=100
+
+1) 455MB. MaxMemory -  объем памяти,jvm. Без survivor space-ов (используется один)
+2) 3) 
+Max memory: 491 MBHeap
+ PSYoungGen      total 153088K, used 13159K [0x00000000f5580000, 0x0000000100000000, 0x0000000100000000)
+  eden space 131584K, 10% used [0x00000000f5580000,0x00000000f6259c00,0x00000000fd600000)
+  from space 21504K, 0% used [0x00000000feb00000,0x00000000feb00000,0x0000000100000000)
+  to   space 21504K, 0% used [0x00000000fd600000,0x00000000fd600000,0x00000000feb00000)
+ ParOldGen       total 349696K, used 0K [0x00000000e0000000, 0x00000000f5580000, 0x00000000f5580000)
+  object space 349696K, 0% used [0x00000000e0000000,0x00000000e0000000,0x00000000f5580000)
+ Metaspace       used 3809K, capacity 4442K, committed 4789K, reserved 1056768K
+  class space    used 466K, capacity 440K, committed 512K, reserved 1038576K
+4) Проверим эту гипотезу, уберем survivor space, получим 512MB.
+
+Видим, что 20MB уходят на один из survivor-ов. 
+5) 510MB Делаем соотношение 1/100 выжившего к эдэму. Размер выжившего 2мб 
+
+
+PrematurePromotion
+// 1.  -verbose:gc -Xmx24m -XX:NewSize=16m
+//  -XX:MaxTenuringThreshold=1 -XX:-UseAdaptiveSizePolicy
+
+// 2.  -verbose:gc -Xmx64m -XX:NewSize=32m
+//              -XX:MaxTenuringThreshold=1 -XX:-UseAdaptiveSizePolicy
+
+// 3.  -Dmax.chunks=1000 -verbose:gc -Xmx24m -XX:NewSize=16m
+//              -XX:MaxTenuringThreshold=1 -XX:-UseAdaptiveSizePolicy
+
+
+1) Объект живет мало, но в попадает в old gen. Делаем итерации из одного survivor в другой 1 раз, чтобы быстрее попадали в old gen. уменьшаем размер young gen. Получим много объектов переходящих в old поколение. Будет много полных сборок. 
+[GC (Allocation Failure) -- 17750K->21526K(22528K), 0.005178 secs]
+[Full GC (Ergonomics)  22526K->7145K(22528K), 0.0082223 secs]
+[Full GC (Ergonomics)  19433K->9243K(22528K), 0.0072852 secs]
+[Full GC (Ergonomics)  20000K->9815K(22528K), 0.0083762 secs]
+[Full GC (Ergonomics)  20061K->9886K(22528K), 0.0086092 secs]
+2) увеличим размер. Получаем больше minor collections. 
+[GC (Allocation Failure)  48663K->28543K(61440K), 0.0037478 secs]
+[GC (Allocation Failure)  53119K->24703K(61440K), 0.0006062 secs]
+[GC (Allocation Failure)  49279K->28999K(61440K), 0.0022561 secs]
+[GC (Allocation Failure)  53575K->34199K(61440K), 0.0046779 secs]
+[Full GC (Ergonomics)  33192K->9400K(61440K), 0.0086135 secs]
+3) меняем размер партий.
+[GC (Allocation Failure)  13804K->1590K(22528K), 0.0008785 secs]
+[GC (Allocation Failure)  13868K->1612K(22528K), 0.0007097 secs]
+[GC (Allocation Failure)  13900K->1624K(22528K), 0.0006456 secs]
+[GC (Allocation Failure)  13932K->1636K(22528K), 0.0007342 secs]
+[GC (Allocation Failure)  13964K->1740K(22528K), 0.0008875 secs]
+
+SoftReference — если GC видит что объект доступен только через цепочку soft-ссылок, то он удалит его из памяти. Потом. Наверно.
+WeakReference — если GC видит что объект доступен только через цепочку weak-ссылок, то он удалит его из памяти.
+PhantomReference — если GC видит что объект доступен только через цепочку phantom-ссылок, то он его удалит из памяти. После нескольких запусков GC.
+
+
+SoftReferences
+// 1. Run with: -verbose:gc -Xmx24m -XX:NewSize=16m
+//              -XX:MaxTenuringThreshold=1 -XX:-UseAdaptiveSizePolicy
+//
+// 2. Run with: -Dsoft.refs=true -verbose:gc -Xmx24m -XX:NewSize=16m
+//              -XX:MaxTenuringThreshold=1 -XX:-UseAdaptiveSizePolicy
+//
+// 3. Run with: -Dsoft.refs=true -verbose:gc -Xmx64m -XX:NewSize=32m
+//              -XX:MaxTenuringThreshold=1 -XX:-UseAdaptiveSizePolicy
+1) Все soft ссылки  объект.
+[GC (Allocation Failure)  17899K->8464K(22528K), 0.0149884 secs]
+[GC (Allocation Failure)  20852K->8372K(22528K), 0.0150705 secs]
+[GC (Allocation Failure)  20660K->7796K(22528K), 0.0072296 secs]
+[GC (Allocation Failure)  20084K->7252K(22528K), 0.0064610 secs]
+2) Если программа не собирается генерировать OutOfMemoryError, объекты soft ссылок не будут собираться.
+[Full GC (Ergonomics)  20477K->4548K(22528K), 0.0114900 secs]
+[GC (Allocation Failure) -- 16836K->20476K(22528K), 0.0239794 secs]
+[Full GC (Ergonomics)  20476K->16831K(22528K), 0.0324805 secs]
+[GC (Allocation Failure) -- 20423K->20479K(22528K), 0.0116849 secs]
+[Full GC (Ergonomics)  20376K->4451K(22528K), 0.0129056 secs]
+3) даже увеличение young-а и heap-а не помогает
+[GC (Allocation Failure)  40454K->25134K(61440K), 0.0164697 secs]
+[Full GC (Ergonomics)  25124K->13764K(61440K), 0.0445247 secs]
+[GC (Allocation Failure)  38340K->19356K(61440K), 0.0090925 secs]
+[GC (Allocation Failure)  43932K->29684K(61440K), 0.0238695 secs]
+[Full GC (Ergonomics)  29684K->15284K(61440K), 0.0358592 secs]
+
+
+WeakReferences
+// 1. Run with: -verbose:gc -Xmx24m -XX:NewSize=16m
+//              -XX:MaxTenuringThreshold=1 -XX:-UseAdaptiveSizePolicy
+//
+// 2. Run with: -Dweak.refs=true -verbose:gc -Xmx24m -XX:NewSize=16m
+//              -XX:MaxTenuringThreshold=1 -XX:-UseAdaptiveSizePolicy
+//
+// 3. Run with: -Dweak.refs=true -verbose:gc -Xmx64m -XX:NewSize=32m
+//              -XX:MaxTenuringThreshold=1 -XX:-UseAdaptiveSizePolicy
+1) Смотрим young gc. Все слабые ссылки указывают на один и тот же объект. До добавления слабых ссылок, объекты умирали до перехода в old gen.
+[GC (Allocation Failure)  20874K->8170K(22528K), 0.0090908 secs]
+[GC (Allocation Failure)  20458K->7786K(22528K), 0.0073285 secs]
+[GC (Allocation Failure)  20274K->7338K(22528K), 0.0030619 secs]
+[GC (Allocation Failure)  18726K->9002K(22528K), 0.0136028 secs]
+[Full GC (Ergonomics)  9102K->2932K(22528K), 0.0284214 secs]
+2) Заставим приложение создавать слабые ссылки ( -Dweak.refs = true ) на объекты, теперь они задерживаются на доп раунде gc. Следовательно есть полные gc.
+[GC (Allocation Failure)  19090K->10418K(23552K), 0.0082484 secs]
+[GC (Allocation Failure)  18610K->12074K(23552K), 0.0287514 secs]
+[GC (Allocation Failure)  20266K->11762K(23552K), 0.0114932 secs]
+[GC (Allocation Failure)  19754K->13182K(23552K), 0.0144617 secs]
+[Full GC (Ergonomics)  13282K->2782K(23552K), 0.0317524 secs]
+3) Объекты утилизируются минорным сборщиком.
+[GC (Allocation Failure)  17286K->1518K(22016K), 0.0046099 secs]
+[GC (Allocation Failure)  17390K->1630K(22016K), 0.0058079 secs]
+[GC (Allocation Failure)  17502K->1694K(22016K), 0.0051448 secs]
+[GC (Allocation Failure)  17566K->1790K(22016K), 0.0061373 secs]
+[GC (Allocation Failure)  17662K->1822K(22016K), 0.0076524 secs]
+?
+
+
+
