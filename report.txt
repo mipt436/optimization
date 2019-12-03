@@ -1,3 +1,9 @@
+Ð‘Ñ‹Ð»Ð¸ Ð·Ð°Ð¿ÑƒÑ‰ÐµÐ½Ñ‹:
+1.MaxMemory
+2.PrematurePromotion
+3.WeakReferences
+4.SoftReferences
+
 MaxMemory
 1. -Xmx512m
 2. -Xmx512m -Xms512m
@@ -5,7 +11,7 @@ MaxMemory
 4. -Xmx512m -XX:+UseG1GC
 5. -Xms512m -Xmx512m -XX:SurvivorRatio=100
 
-1) 455MB. MaxMemory -  îáúåì ïàìÿòè,jvm. Áåç survivor space-îâ (èñïîëüçóåòñÿ îäèí)
+1) 455MB. MaxMemory -  Ð¾Ð±ÑŠÐµÐ¼ Ð¿Ð°Ð¼ÑÑ‚Ð¸,jvm. Ð‘ÐµÐ· survivor space-Ð¾Ð² (Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·ÑƒÐµÑ‚ÑÑ Ð¾Ð´Ð¸Ð½)
 2) 3) 
 Max memory: 491 MBHeap
  PSYoungGen      total 153088K, used 13159K [0x00000000f5580000, 0x0000000100000000, 0x0000000100000000)
@@ -16,10 +22,10 @@ Max memory: 491 MBHeap
   object space 349696K, 0% used [0x00000000e0000000,0x00000000e0000000,0x00000000f5580000)
  Metaspace       used 3809K, capacity 4442K, committed 4789K, reserved 1056768K
   class space    used 466K, capacity 440K, committed 512K, reserved 1038576K
-4) Ïðîâåðèì ýòó ãèïîòåçó, óáåðåì survivor space, ïîëó÷èì 512MB.
+4) ÐŸÑ€Ð¾Ð²ÐµÑ€Ð¸Ð¼ ÑÑ‚Ñƒ Ð³Ð¸Ð¿Ð¾Ñ‚ÐµÐ·Ñƒ, ÑƒÐ±ÐµÑ€ÐµÐ¼ survivor space, Ð¿Ð¾Ð»ÑƒÑ‡Ð¸Ð¼ 512MB.
 
-Âèäèì, ÷òî 20MB óõîäÿò íà îäèí èç survivor-îâ. 
-5) 510MB Äåëàåì ñîîòíîøåíèå 1/100 âûæèâøåãî ê ýäýìó. Ðàçìåð âûæèâøåãî 2ìá 
+Ð’Ð¸Ð´Ð¸Ð¼, Ñ‡Ñ‚Ð¾ 20MB ÑƒÑ…Ð¾Ð´ÑÑ‚ Ð½Ð° Ð¾Ð´Ð¸Ð½ Ð¸Ð· survivor-Ð¾Ð². 
+5) 510MB Ð”ÐµÐ»Ð°ÐµÐ¼ ÑÐ¾Ð¾Ñ‚Ð½Ð¾ÑˆÐµÐ½Ð¸Ðµ 1/100 Ð²Ñ‹Ð¶Ð¸Ð²ÑˆÐµÐ³Ð¾ Ðº ÑÐ´ÑÐ¼Ñƒ. Ð Ð°Ð·Ð¼ÐµÑ€ Ð²Ñ‹Ð¶Ð¸Ð²ÑˆÐµÐ³Ð¾ 2Ð¼Ð± 
 
 
 PrematurePromotion
@@ -33,28 +39,32 @@ PrematurePromotion
 //              -XX:MaxTenuringThreshold=1 -XX:-UseAdaptiveSizePolicy
 
 
-1) Îáúåêò æèâåò ìàëî, íî â ïîïàäàåò â old gen. Äåëàåì èòåðàöèè èç îäíîãî survivor â äðóãîé 1 ðàç, ÷òîáû áûñòðåå ïîïàäàëè â old gen. óìåíüøàåì ðàçìåð young gen. Ïîëó÷èì ìíîãî îáúåêòîâ ïåðåõîäÿùèõ â old ïîêîëåíèå. Áóäåò ìíîãî ïîëíûõ ñáîðîê. 
+1) ÐžÐ±ÑŠÐµÐºÑ‚ Ð¶Ð¸Ð²ÐµÑ‚ Ð¼Ð°Ð»Ð¾, Ð½Ð¾ Ð² Ð¿Ð¾Ð¿Ð°Ð´Ð°ÐµÑ‚ Ð² old gen. Ð”ÐµÐ»Ð°ÐµÐ¼ Ð¸Ñ‚ÐµÑ€Ð°Ñ†Ð¸Ð¸ Ð¸Ð· Ð¾Ð´Ð½Ð¾Ð³Ð¾ survivor Ð² Ð´Ñ€ÑƒÐ³Ð¾Ð¹ 1 Ñ€Ð°Ð·, Ñ‡Ñ‚Ð¾Ð±Ñ‹ Ð±Ñ‹ÑÑ‚Ñ€ÐµÐµ Ð¿Ð¾Ð¿Ð°Ð´Ð°Ð»Ð¸ Ð² 
+
+old gen. ÑƒÐ¼ÐµÐ½ÑŒÑˆÐ°ÐµÐ¼ Ñ€Ð°Ð·Ð¼ÐµÑ€ young gen. ÐŸÐ¾Ð»ÑƒÑ‡Ð¸Ð¼ Ð¼Ð½Ð¾Ð³Ð¾ Ð¾Ð±ÑŠÐµÐºÑ‚Ð¾Ð² Ð¿ÐµÑ€ÐµÑ…Ð¾Ð´ÑÑ‰Ð¸Ñ… Ð² old Ð¿Ð¾ÐºÐ¾Ð»ÐµÐ½Ð¸Ðµ. Ð‘ÑƒÐ´ÐµÑ‚ Ð¼Ð½Ð¾Ð³Ð¾ Ð¿Ð¾Ð»Ð½Ñ‹Ñ… ÑÐ±Ð¾Ñ€Ð¾Ðº. 
 [GC (Allocation Failure) -- 17750K->21526K(22528K), 0.005178 secs]
 [Full GC (Ergonomics)  22526K->7145K(22528K), 0.0082223 secs]
 [Full GC (Ergonomics)  19433K->9243K(22528K), 0.0072852 secs]
 [Full GC (Ergonomics)  20000K->9815K(22528K), 0.0083762 secs]
 [Full GC (Ergonomics)  20061K->9886K(22528K), 0.0086092 secs]
-2) óâåëè÷èì ðàçìåð. Ïîëó÷àåì áîëüøå minor collections. 
+2) ÑƒÐ²ÐµÐ»Ð¸Ñ‡Ð¸Ð¼ Ñ€Ð°Ð·Ð¼ÐµÑ€. ÐŸÐ¾Ð»ÑƒÑ‡Ð°ÐµÐ¼ Ð±Ð¾Ð»ÑŒÑˆÐµ minor collections. 
 [GC (Allocation Failure)  48663K->28543K(61440K), 0.0037478 secs]
 [GC (Allocation Failure)  53119K->24703K(61440K), 0.0006062 secs]
 [GC (Allocation Failure)  49279K->28999K(61440K), 0.0022561 secs]
 [GC (Allocation Failure)  53575K->34199K(61440K), 0.0046779 secs]
 [Full GC (Ergonomics)  33192K->9400K(61440K), 0.0086135 secs]
-3) ìåíÿåì ðàçìåð ïàðòèé.
+3) Ð¼ÐµÐ½ÑÐµÐ¼ Ñ€Ð°Ð·Ð¼ÐµÑ€ Ð¿Ð°Ñ€Ñ‚Ð¸Ð¹.
 [GC (Allocation Failure)  13804K->1590K(22528K), 0.0008785 secs]
 [GC (Allocation Failure)  13868K->1612K(22528K), 0.0007097 secs]
 [GC (Allocation Failure)  13900K->1624K(22528K), 0.0006456 secs]
 [GC (Allocation Failure)  13932K->1636K(22528K), 0.0007342 secs]
 [GC (Allocation Failure)  13964K->1740K(22528K), 0.0008875 secs]
 
-SoftReference — åñëè GC âèäèò ÷òî îáúåêò äîñòóïåí òîëüêî ÷åðåç öåïî÷êó soft-ññûëîê, òî îí óäàëèò åãî èç ïàìÿòè. Ïîòîì. Íàâåðíî.
-WeakReference — åñëè GC âèäèò ÷òî îáúåêò äîñòóïåí òîëüêî ÷åðåç öåïî÷êó weak-ññûëîê, òî îí óäàëèò åãî èç ïàìÿòè.
-PhantomReference — åñëè GC âèäèò ÷òî îáúåêò äîñòóïåí òîëüêî ÷åðåç öåïî÷êó phantom-ññûëîê, òî îí åãî óäàëèò èç ïàìÿòè. Ïîñëå íåñêîëüêèõ çàïóñêîâ GC.
+SoftReference â€” ÐµÑÐ»Ð¸ GC Ð²Ð¸Ð´Ð¸Ñ‚ Ñ‡Ñ‚Ð¾ Ð¾Ð±ÑŠÐµÐºÑ‚ Ð´Ð¾ÑÑ‚ÑƒÐ¿ÐµÐ½ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ñ‡ÐµÑ€ÐµÐ· Ñ†ÐµÐ¿Ð¾Ñ‡ÐºÑƒ soft-ÑÑÑ‹Ð»Ð¾Ðº, Ñ‚Ð¾ Ð¾Ð½ ÑƒÐ´Ð°Ð»Ð¸Ñ‚ ÐµÐ³Ð¾ Ð¸Ð· Ð¿Ð°Ð¼ÑÑ‚Ð¸. ÐŸÐ¾Ñ‚Ð¾Ð¼. 
+ÐÐ°Ð²ÐµÑ€Ð½Ð¾.
+WeakReference â€” ÐµÑÐ»Ð¸ GC Ð²Ð¸Ð´Ð¸Ñ‚ Ñ‡Ñ‚Ð¾ Ð¾Ð±ÑŠÐµÐºÑ‚ Ð´Ð¾ÑÑ‚ÑƒÐ¿ÐµÐ½ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ñ‡ÐµÑ€ÐµÐ· Ñ†ÐµÐ¿Ð¾Ñ‡ÐºÑƒ weak-ÑÑÑ‹Ð»Ð¾Ðº, Ñ‚Ð¾ Ð¾Ð½ ÑƒÐ´Ð°Ð»Ð¸Ñ‚ ÐµÐ³Ð¾ Ð¸Ð· Ð¿Ð°Ð¼ÑÑ‚Ð¸.
+PhantomReference â€” ÐµÑÐ»Ð¸ GC Ð²Ð¸Ð´Ð¸Ñ‚ Ñ‡Ñ‚Ð¾ Ð¾Ð±ÑŠÐµÐºÑ‚ Ð´Ð¾ÑÑ‚ÑƒÐ¿ÐµÐ½ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ñ‡ÐµÑ€ÐµÐ· Ñ†ÐµÐ¿Ð¾Ñ‡ÐºÑƒ phantom-ÑÑÑ‹Ð»Ð¾Ðº, Ñ‚Ð¾ Ð¾Ð½ ÐµÐ³Ð¾ ÑƒÐ´Ð°Ð»Ð¸Ñ‚ Ð¸Ð· Ð¿Ð°Ð¼ÑÑ‚Ð¸. ÐŸÐ¾ÑÐ»Ðµ 
+Ð½ÐµÑÐºÐ¾Ð»ÑŒÐºÐ¸Ñ… Ð·Ð°Ð¿ÑƒÑÐºÐ¾Ð² GC.
 
 
 SoftReferences
@@ -66,18 +76,18 @@ SoftReferences
 //
 // 3. Run with: -Dsoft.refs=true -verbose:gc -Xmx64m -XX:NewSize=32m
 //              -XX:MaxTenuringThreshold=1 -XX:-UseAdaptiveSizePolicy
-1) Âñå soft ññûëêè  îáúåêò.
+1) Ð’ÑÐµ soft ÑÑÑ‹Ð»ÐºÐ¸  Ð¾Ð±ÑŠÐµÐºÑ‚.
 [GC (Allocation Failure)  17899K->8464K(22528K), 0.0149884 secs]
 [GC (Allocation Failure)  20852K->8372K(22528K), 0.0150705 secs]
 [GC (Allocation Failure)  20660K->7796K(22528K), 0.0072296 secs]
 [GC (Allocation Failure)  20084K->7252K(22528K), 0.0064610 secs]
-2) Åñëè ïðîãðàììà íå ñîáèðàåòñÿ ãåíåðèðîâàòü OutOfMemoryError, îáúåêòû soft ññûëîê íå áóäóò ñîáèðàòüñÿ.
+2) Ð•ÑÐ»Ð¸ Ð¿Ñ€Ð¾Ð³Ñ€Ð°Ð¼Ð¼Ð° Ð½Ðµ ÑÐ¾Ð±Ð¸Ñ€Ð°ÐµÑ‚ÑÑ Ð³ÐµÐ½ÐµÑ€Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ OutOfMemoryError, Ð¾Ð±ÑŠÐµÐºÑ‚Ñ‹ soft ÑÑÑ‹Ð»Ð¾Ðº Ð½Ðµ Ð±ÑƒÐ´ÑƒÑ‚ ÑÐ¾Ð±Ð¸Ñ€Ð°Ñ‚ÑŒÑÑ.
 [Full GC (Ergonomics)  20477K->4548K(22528K), 0.0114900 secs]
 [GC (Allocation Failure) -- 16836K->20476K(22528K), 0.0239794 secs]
 [Full GC (Ergonomics)  20476K->16831K(22528K), 0.0324805 secs]
 [GC (Allocation Failure) -- 20423K->20479K(22528K), 0.0116849 secs]
 [Full GC (Ergonomics)  20376K->4451K(22528K), 0.0129056 secs]
-3) äàæå óâåëè÷åíèå young-à è heap-à íå ïîìîãàåò
+3) Ð´Ð°Ð¶Ðµ ÑƒÐ²ÐµÐ»Ð¸Ñ‡ÐµÐ½Ð¸Ðµ young-Ð° Ð¸ heap-Ð° Ð½Ðµ Ð¿Ð¾Ð¼Ð¾Ð³Ð°ÐµÑ‚
 [GC (Allocation Failure)  40454K->25134K(61440K), 0.0164697 secs]
 [Full GC (Ergonomics)  25124K->13764K(61440K), 0.0445247 secs]
 [GC (Allocation Failure)  38340K->19356K(61440K), 0.0090925 secs]
@@ -94,25 +104,28 @@ WeakReferences
 //
 // 3. Run with: -Dweak.refs=true -verbose:gc -Xmx64m -XX:NewSize=32m
 //              -XX:MaxTenuringThreshold=1 -XX:-UseAdaptiveSizePolicy
-1) Ñìîòðèì young gc. Âñå ñëàáûå ññûëêè óêàçûâàþò íà îäèí è òîò æå îáúåêò. Äî äîáàâëåíèÿ ñëàáûõ ññûëîê, îáúåêòû óìèðàëè äî ïåðåõîäà â old gen.
+1) Ð¡Ð¼Ð¾Ñ‚Ñ€Ð¸Ð¼ young gc. Ð’ÑÐµ ÑÐ»Ð°Ð±Ñ‹Ðµ ÑÑÑ‹Ð»ÐºÐ¸ ÑƒÐºÐ°Ð·Ñ‹Ð²Ð°ÑŽÑ‚ Ð½Ð° Ð¾Ð´Ð¸Ð½ Ð¸ Ñ‚Ð¾Ñ‚ Ð¶Ðµ Ð¾Ð±ÑŠÐµÐºÑ‚. Ð”Ð¾ Ð´Ð¾Ð±Ð°Ð²Ð»ÐµÐ½Ð¸Ñ ÑÐ»Ð°Ð±Ñ‹Ñ… ÑÑÑ‹Ð»Ð¾Ðº, Ð¾Ð±ÑŠÐµÐºÑ‚Ñ‹ ÑƒÐ¼Ð¸Ñ€Ð°Ð»Ð¸ Ð´Ð¾ 
+
+Ð¿ÐµÑ€ÐµÑ…Ð¾Ð´Ð° Ð² old gen.
 [GC (Allocation Failure)  20874K->8170K(22528K), 0.0090908 secs]
 [GC (Allocation Failure)  20458K->7786K(22528K), 0.0073285 secs]
 [GC (Allocation Failure)  20274K->7338K(22528K), 0.0030619 secs]
 [GC (Allocation Failure)  18726K->9002K(22528K), 0.0136028 secs]
 [Full GC (Ergonomics)  9102K->2932K(22528K), 0.0284214 secs]
-2) Çàñòàâèì ïðèëîæåíèå ñîçäàâàòü ñëàáûå ññûëêè ( -Dweak.refs = true ) íà îáúåêòû, òåïåðü îíè çàäåðæèâàþòñÿ íà äîï ðàóíäå gc. Ñëåäîâàòåëüíî åñòü ïîëíûå gc.
+2) Ð—Ð°ÑÑ‚Ð°Ð²Ð¸Ð¼ Ð¿Ñ€Ð¸Ð»Ð¾Ð¶ÐµÐ½Ð¸Ðµ ÑÐ¾Ð·Ð´Ð°Ð²Ð°Ñ‚ÑŒ ÑÐ»Ð°Ð±Ñ‹Ðµ ÑÑÑ‹Ð»ÐºÐ¸ ( -Dweak.refs = true ) Ð½Ð° Ð¾Ð±ÑŠÐµÐºÑ‚Ñ‹, Ñ‚ÐµÐ¿ÐµÑ€ÑŒ Ð¾Ð½Ð¸ Ð·Ð°Ð´ÐµÑ€Ð¶Ð¸Ð²Ð°ÑŽÑ‚ÑÑ Ð½Ð° Ð´Ð¾Ð¿ Ñ€Ð°ÑƒÐ½Ð´Ðµ 
+
+gc. Ð¡Ð»ÐµÐ´Ð¾Ð²Ð°Ñ‚ÐµÐ»ÑŒÐ½Ð¾ ÐµÑÑ‚ÑŒ Ð¿Ð¾Ð»Ð½Ñ‹Ðµ gc.
 [GC (Allocation Failure)  19090K->10418K(23552K), 0.0082484 secs]
 [GC (Allocation Failure)  18610K->12074K(23552K), 0.0287514 secs]
 [GC (Allocation Failure)  20266K->11762K(23552K), 0.0114932 secs]
 [GC (Allocation Failure)  19754K->13182K(23552K), 0.0144617 secs]
 [Full GC (Ergonomics)  13282K->2782K(23552K), 0.0317524 secs]
-3) Îáúåêòû óòèëèçèðóþòñÿ ìèíîðíûì ñáîðùèêîì.
+3) ÐžÐ±ÑŠÐµÐºÑ‚Ñ‹ ÑƒÑ‚Ð¸Ð»Ð¸Ð·Ð¸Ñ€ÑƒÑŽÑ‚ÑÑ Ð¼Ð¸Ð½Ð¾Ñ€Ð½Ñ‹Ð¼ ÑÐ±Ð¾Ñ€Ñ‰Ð¸ÐºÐ¾Ð¼.
 [GC (Allocation Failure)  17286K->1518K(22016K), 0.0046099 secs]
 [GC (Allocation Failure)  17390K->1630K(22016K), 0.0058079 secs]
 [GC (Allocation Failure)  17502K->1694K(22016K), 0.0051448 secs]
 [GC (Allocation Failure)  17566K->1790K(22016K), 0.0061373 secs]
 [GC (Allocation Failure)  17662K->1822K(22016K), 0.0076524 secs]
-?
-
+â€ƒ
 
 
